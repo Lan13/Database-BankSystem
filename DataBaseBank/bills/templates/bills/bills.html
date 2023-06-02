@@ -1,0 +1,63 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">客户{{ account.user.name }}，卡号 {{ account.account_id }} 的账单</h2>
+{% endblock page_header %}
+
+{% block content %}
+<!-- create bills list -->
+<div class="container row">
+{% for bill in bills %}
+    <div class="card mb-3 col-sm-6">
+      <h4 class="card-header">
+        <a> 账单号： {{ bill.bill_id }}</a>
+      </h4>
+      <div class="card-body">
+          <p class="card-text">账单金额： {{ bill.changes|floatformat:2 }}元</p>
+          <p class="card-text">账单类型： {{ bill.type }}</p>
+          <p class="card-text">账单备注： {{ bill.remark }}</p>
+          <p class="card-text">账户余额： {{ bill.money|floatformat:2 }}元</p>
+      </div>
+      <div class="card-footer text-muted">
+          <span><small>时间：{{ bill.update_time|date:'Y-m-d, H:i' }}</small></span>
+      </div>
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if bills.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ bills.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ bills.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ bills.number }}
+            </span>
+            {% if bills.has_next %}
+                <a href="?page={{ bills.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ bills.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ bills.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ bills.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+{% endblock content %}

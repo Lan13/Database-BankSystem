@@ -1,0 +1,20 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">修改员工个人信息</h2>
+{% endblock page_header %}
+
+{% block content %}
+<form method="post" action="{% url 'staffs:edit_staff' staff.staff_id %}" class="form" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% if staff.photo %}
+        <img src="{{ staff.photo.url }}" style="width: 150px; height: auto;">
+    {% endif %}
+    {% buttons %}
+    <button name="submit" class="btn btn-primary">确认修改</button>
+    {% endbuttons %}
+    <input type="hidden" name="next" value="{% url 'staffs:staffs' %}">
+</form>
+{% endblock content %}

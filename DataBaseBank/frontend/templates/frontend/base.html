@@ -1,0 +1,71 @@
+{% load bootstrap4 %}
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device=width, initial-sacle=1, shrink-to-fit=no">
+    <title>不是银行</title>
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript jquery='fill' %}
+</head>
+
+<body>
+<nav class="navbar navbar-expand-md navbar-light bg-light mb-4 border ">
+    <a class="navbar-brand" href="{% url 'frontend:index' %}">银行</a>
+    <a class="navbar-brand" href="{% url 'branches:branches' %}">支行</a>
+    <a class="navbar-brand" href="{% url 'departments:departments' %}">部门</a>
+    <a class="navbar-brand" href="{% url 'staffs:staffs' %}">员工</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarCollapse" aria-controls="navbarCollapse"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarCollapse">
+    <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item dropdown">
+             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-expanded="false">
+                 {{ user.username }}
+             </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                {% if user.is_superuser %}
+                    <a class="dropdown-item" href="/admin">系统后台</a>
+                {% else %}
+                    <a class="dropdown-item" href="{% url 'accounts:accounts' user.id %}">账户信息</a>
+                    <a class="dropdown-item" href="{% url 'loans:loans' user.id %}">贷款信息</a>
+                    <a class="dropdown-item" href="{% url 'users:edit' user.id %}">修改信息</a>
+                    <a class="dropdown-item" href="{% url 'users:change_pwd' user.id %}">修改密码</a>
+                    <a class="dropdown-item" href="{% url 'accounts:create_account' user.id %}">创建账户</a>
+                    <a class="dropdown-item" href="{% url 'loans:apply_loan' user.id %}">申请贷款</a>
+                {% endif %}
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:logout' %}">退出</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:login' %}">登录</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{% url 'users:register' %}">注册</a>
+        </li>
+        {% endif %}
+    </ul>
+    </div>
+</nav>
+
+<main role="main" class="container">
+        <div class="pb-2 mb-2 border-bottom">
+            {% block page_header %}{% endblock page_header %}
+        </div>
+        <div>
+            {% block content %}{% endblock content %}
+        </div>
+</main>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">支行信息</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container row">
+{% for branch in branches %}
+    <div class="card mb-3 col-sm-6">
+      <div class="card-body">
+          <p class="card-text">支行名称： {{ branch.name }}</p>
+          <p class="card-text">支行地址： {{ branch.address }}</p>
+          <p class="card-text">支行电话： {{ branch.tel }}</p>
+      </div>
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if branches.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ branches.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ branches.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ branches.number }}
+            </span>
+            {% if branches.has_next %}
+                <a href="?page={{ branches.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ branches.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ branches.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ branches.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}

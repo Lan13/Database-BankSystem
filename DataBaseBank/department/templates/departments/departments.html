@@ -1,0 +1,70 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">支行部门信息</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container row">
+{% for department in departments %}
+    <div class="card mb-3 col-sm-6">
+      <div class="card-body">
+          <p class="card-text">部门号： {{ department.department_id }}</p>
+          <p class="card-text">所属支行： {{ department.branch }}</p>
+          <p class="card-text">部门名称： {{ department.name }}</p>
+          <p class="card-text">部门经理： {{ department.manager }}</p>
+      </div>
+      <div class="card-footer text-muted">
+          <a href="{% url 'departments:department_staffs' department.department_id %}" class="btn btn-primary">员工信息</a>
+          {% if user.is_superuser %}
+            <a href="{% url 'staffs:create_staff' department.department_id %}" class="btn btn-primary">创建员工</a>
+          <a href="{% url 'staffs:delete_manager' department.department_id %}" class="btn btn-primary">取消经理</a>
+          {% endif %}
+      </div>
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if departments.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ departments.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ departments.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ departments.number }}
+            </span>
+            {% if departments.has_next %}
+                <a href="?page={{ departments.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ departments.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ departments.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ departments.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}

@@ -1,0 +1,83 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">账户信息</h2>
+  <p> 身份证号码： {{ account_user.id }}，
+      客户名： {{ account_user.name }}，
+      电话： {{ account_user.tel }}，
+      家庭住址： {{ account_user.address }}，
+      账户数量： {{ account_user.counts }}，
+      账户状态： {{ account_user.status }}
+  </p>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container row">
+{% for account in accounts %}
+    <div class="card mb-3 col-sm-6">
+      <h4 class="card-header">
+        <a> 卡号： {{ account.account_id }}</a>
+          <span class="text-muted" style="float: right;">
+              <a href="{% url 'accounts:delete_account' account.account_id %}" class="btn btn-primary">删除账户</a>
+          </span>
+      </h4>
+      <div class="card-body">
+          <p class="card-text">持有人： {{ account.user.name }}</p>
+          <p class="card-text">余额： {{ account.money|floatformat:2 }}元</p>
+          <p class="card-text">开户银行名称： {{ account.branch.name }}</p>
+          <p class="card-text">开户时间：{{ account.create_date|date:'Y-m-d, H:i' }}</p>
+      </div>
+      <div class="card-footer text-muted">
+          <a href="{% url 'accounts:transfer' account.account_id %}" class="btn btn-primary">转账</a>
+          <a href="{% url 'bills:create_bill' account.account_id %}" class="btn btn-primary">创建账单</a>
+          <a href="{% url 'bills:bills' account.account_id %}" class="btn btn-primary">账单详情</a>
+      </div>
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if accounts.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ accounts.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ accounts.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ accounts.number }}
+            </span>
+            {% if accounts.has_next %}
+                <a href="?page={{ accounts.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ accounts.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ accounts.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ accounts.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}

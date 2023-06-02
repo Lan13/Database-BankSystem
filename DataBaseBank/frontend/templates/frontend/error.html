@@ -1,0 +1,13 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+
+{% block content %}
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}
+{% endblock %}

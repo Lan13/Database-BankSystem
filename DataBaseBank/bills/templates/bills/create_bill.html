@@ -1,0 +1,17 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">创建一个新的账单</h2>
+{% endblock page_header %}
+
+{% block content %}
+<form method="post" action="{% url 'bills:create_bill' account.account_id %}" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button name="submit" class="btn btn-primary">创建</button>
+    {% endbuttons %}
+    <input type="hidden" name="next" value="{% url 'accounts:accounts' user.id %}">
+</form>
+{% endblock content %}

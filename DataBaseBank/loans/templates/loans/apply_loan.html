@@ -1,0 +1,17 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">申请贷款</h2>
+{% endblock page_header %}
+
+{% block content %}
+<form method="post" action="{% url 'loans:apply_loan' user.id %}" class="form">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    {% buttons %}
+    <button name="submit" class="btn btn-primary">申请</button>
+    {% endbuttons %}
+    <input type="hidden" name="next" value="{% url 'loans:loans' user.id %}">
+</form>
+{% endblock content %}

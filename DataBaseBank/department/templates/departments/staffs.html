@@ -1,0 +1,80 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">员工信息</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container row">
+{% for staff in staffs %}
+    <div class="card mb-3 col-sm-6">
+        <div class="card-body">
+            <div class="media">
+                {% if staff.photo %}
+                    <img src="{{ staff.photo.url }}" class="mr-3" style="width: 150px; height: auto;">
+                {% endif %}
+                <div class="media-body">
+                    <p class="card-text">姓名: {{ staff.name }}</p>
+                    <p class="card-text">部门: {{ staff.department }}</p>
+                    <p class="card-text">工号: {{ staff.staff_id }}</p>
+                    <p class="card-text">电话: {{ staff.tel }}</p>
+                    <p class="card-text">地址: {{ staff.address }}</p>
+                </div>
+            </div>
+        </div>
+        {% if user.is_superuser %}
+            <div class="card-footer text-muted">
+                <a href="{% url 'staffs:set_manager' staff.staff_id staff.department.department_id %}" class="btn btn-primary">设置经理</a>
+                <a href="{% url 'staffs:edit_staff' staff.staff_id %}" class="btn btn-primary">修改信息</a>
+                <a href="{% url 'staffs:delete_staff' staff.staff_id %}" class="btn btn-primary">删除员工</a>
+            </div>
+        {% endif %}
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if staffs.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ staffs.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ staffs.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ staffs.number }}
+            </span>
+            {% if staffs.has_next %}
+                <a href="?page={{ staffs.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ staffs.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ staffs.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ staffs.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}
