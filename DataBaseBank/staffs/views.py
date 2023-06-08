@@ -17,6 +17,13 @@ def staffs(request):
 
 
 def create_staff(request, department_id):
+    name = None
+    if request.user.is_superuser:
+        name = request.user.username
+    branch = BranchDepartments.objects.get(department_id=department_id).branch_id
+    if not (name and name == branch or name == 'admin'):
+        messages.error(request, '你没有权限操作该部门')
+        return render(request, 'frontend/error.html')
     # judge if user is superuser
     if not request.user.is_superuser:
         messages.error(request, '你没有权限创建员工')
@@ -89,6 +96,13 @@ def delete_staff(request, staff_id):
 
 
 def set_manager(request, staff_id, department_id):
+    name = None
+    if request.user.is_superuser:
+        name = request.user.username
+    branch = BranchDepartments.objects.get(department_id=department_id).branch_id
+    if not (name and name == branch or name == 'admin'):
+        messages.error(request, '你没有权限操作该部门')
+        return render(request, 'frontend/error.html')
     # judge if user is superuser
     if not request.user.is_superuser:
         messages.error(request, '你没有权限设置经理')

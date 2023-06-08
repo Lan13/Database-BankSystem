@@ -1,0 +1,74 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">客户信息</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container row">
+{% for user_info in users %}
+    <div class="card mb-3 col-sm-6">
+      <h4 class="card-header">
+          <p class="card-text">客户身份证号： {{ user_info.id }}</p>
+      </h4>
+      <div class="card-body">
+          <p class="card-text">客户姓名： {{ user_info.name }}</p>
+          <p class="card-text">客户电话： {{ user_info.tel }}</p>
+          <p class="card-text">客户地址： {{ user_info.address }}</p>
+          <p class="card-text">客户账户数量：{{ user_info.counts }}</p>
+          <p class="card-text">客户状态：{{ user_info.status }}</p>
+          <p class="card-text">所属分行：{{ user_info.branch_id }}</p>
+      </div>
+      <div class="card-footer text-muted">
+          <a href="{% url 'users:edit' user_info.user_id %}" class="btn btn-primary">修改信息</a>
+          <a href="" class="btn btn-primary">删除客户</a>
+      </div>
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if users.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ users.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ users.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ users.number }}
+            </span>
+            {% if users.has_next %}
+                <a href="?page={{ users.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ users.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ users.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ users.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}

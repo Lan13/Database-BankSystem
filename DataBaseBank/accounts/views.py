@@ -61,7 +61,7 @@ def delete_account(request, account_id):
 @login_required
 def accounts(request, user_id):
     # judge if the user is the owner of the account
-    if request.user.id != user_id:
+    if request.user.id != user_id and not request.user.is_superuser:
         messages.error(request, '无法查看他人账户')
         return render(request, 'frontend/error.html')
     account_user = BankUser.objects.get(user_id=user_id)

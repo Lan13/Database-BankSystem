@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.http import HttpResponse
@@ -26,7 +27,7 @@ def bank_user_login(request):
     elif request.method == 'GET':
         bank_user_login_form = BankUserLoginForm()
         context = {'form': bank_user_login_form}
-        return render(request, 'users/login.html', context)
+        return render(request, 'registration/login.html', context)
 
 
 def bank_user_register(request):
@@ -84,7 +85,7 @@ def change_pwd(request, user_id):
 def bank_user_edit(request, user_id):
     user = User.objects.get(id=user_id)
     info = BankUser.objects.get(user_id=user_id)
-    if user != request.user:
+    if user != request.user and not request.user.is_superuser:
         messages.error(request, '无法修改他人信息')
         return render(request, 'frontend/error.html')
 
@@ -101,5 +102,22 @@ def bank_user_edit(request, user_id):
             info.save()
             return redirect('accounts:accounts', user_id=user_id)
 
-    context = {'form': form}
+    context = {'form': form, 'user_id': user_id}
     return render(request, 'registration/edit.html', context)
+
+
+@login_required
+def get_users(request):
+    branch_name = None
+    if request.user.is_superuser:
+        branch_name = request.user.username
+    if branch_name:
+        users_lists = BankUser.objects.filter(branch_id=branch_name)
+        paginator = Paginator(users_lists, 4)
+        page = request.GET.get('page')
+        users = paginator.get_page(page)
+        context = {'users': users}
+        return render(request, 'registration/get_users.html', context)
+    else:
+        messages.error(request, '无法查看信息')
+        return render(request, 'frontend/error.html')

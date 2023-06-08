@@ -105,3 +105,19 @@ def loans(request, user_id):
     loans_list = paginator.get_page(page)
     context = {'loans': loans_list, 'loan_user': user}
     return render(request, 'loans/loans.html', context)
+
+
+def branch_loans(request):
+    name = None
+    if request.user.is_superuser:
+        name = request.user.username
+    if name:
+        loans_lists = Loans.objects.filter(branch_id=name)
+        paginator = Paginator(loans_lists, 4)
+        page = request.GET.get('page')
+        loans_page = paginator.get_page(page)
+        context = {'loans': loans_page}
+        return render(request, 'loans/branch_loans.html', context)
+    else:
+        messages.error(request, '无法查看信息')
+        return render(request, 'frontend/error.html')

@@ -8,4 +8,5 @@ urlpatterns = [
     path('loans/<int:user_id>/', views.loans, name="loans"),
     path('delete_loan/<int:loan_id>/', views.delete_loan, name="delete_loan"),
     path('pay_loan/<int:loan_id>/', views.pay_loan, name="pay_loan"),
+    path('branch_loans/', views.branch_loans, name='branch_loans'),
 ]

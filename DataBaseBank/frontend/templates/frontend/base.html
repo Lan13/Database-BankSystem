@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device=width, initial-sacle=1, shrink-to-fit=no">
-    <title>不是银行</title>
+    <title>银行</title>
 
     {% bootstrap_css %}
     {% bootstrap_javascript jquery='fill' %}
@@ -16,7 +16,6 @@
     <a class="navbar-brand" href="{% url 'frontend:index' %}">银行</a>
     <a class="navbar-brand" href="{% url 'branches:branches' %}">支行</a>
     <a class="navbar-brand" href="{% url 'departments:departments' %}">部门</a>
-    <a class="navbar-brand" href="{% url 'staffs:staffs' %}">员工</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarCollapse" aria-controls="navbarCollapse"
             aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +32,8 @@
             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                 {% if user.is_superuser %}
                     <a class="dropdown-item" href="/admin">系统后台</a>
+                    <a class="dropdown-item" href="{% url 'users:get_users' %}">客户信息</a>
+                    <a class="dropdown-item" href="{% url 'loans:branch_loans' %}">贷款信息</a>
                 {% else %}
                     <a class="dropdown-item" href="{% url 'accounts:accounts' user.id %}">账户信息</a>
                     <a class="dropdown-item" href="{% url 'loans:loans' user.id %}">贷款信息</a>
@@ -58,14 +59,26 @@
     </div>
 </nav>
 
-<main role="main" class="container">
-        <div class="pb-2 mb-2 border-bottom">
-            {% block page_header %}{% endblock page_header %}
-        </div>
-        <div>
-            {% block content %}{% endblock content %}
-        </div>
+<main role="main" class="container" style="min-height: calc(100vh - 70px); margin-bottom: 70px;">
+    <div class="pb-2 mb-2 border-bottom">
+        {% block page_header %}{% endblock page_header %}
+    </div>
+    <div>
+        {% block content %}{% endblock content %}
+    </div>
 </main>
+
+<footer class="container-fluid bg-light pt-3" style="position: fixed; bottom: 0; left: 0; right: 0;">
+    <div class="container">
+        <p align="center">
+            <small>&copy;
+            <a href="https://github.com/Lan13/Database-BankSystem" style="color: black;">https://github.com/Lan13/Database-BankSystem</a>
+            </small>
+        </p>
+    </div>
+</footer>
 
 </body>
 </html>
+<!---->
+<!---->

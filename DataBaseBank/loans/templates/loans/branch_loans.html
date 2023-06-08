@@ -1,0 +1,76 @@
+{% extends "frontend/base.html" %}
+{% load bootstrap4 %}
+
+{% block page_header %}
+  <h2 align="center">贷款信息</h2>
+{% endblock page_header %}
+
+{% block content %}
+<div class="container row">
+{% for loan in loans %}
+    <div class="card mb-3 col-sm-6">
+      <h4 class="card-header">
+          <a> 贷款号： {{ loan.loan_id }}</a>
+        <span class="text-muted" style="float: right;">
+            <a href="{% url 'loans:delete_loan' loan.loan_id %}" class="btn btn-primary">删除贷款</a>
+        </span>
+      </h4>
+      <div class="card-body">
+          <p class="card-text">申请人： {{ loan.user.name }}</p>
+          <p class="card-text">贷款金额： {{ loan.money|floatformat:2 }}</p>
+          <p class="card-text">批准银行： {{ loan.branch.name }}</p>
+          <p class="card-text">申请时间：{{ loan.loan_date|date:'Y-m-d, H:i' }}</p>
+          <p class="card-text">还款期限：{{ loan.due_date|date:'Y-m-d, H:i' }}</p>
+          <p class="card-text">未还金额： {{ loan.remain_money|floatformat:2 }}</p>
+          <p class="card-text">贷款状态： {{ loan.status }}</p>
+      </div>
+<!--      <div class="card-footer text-muted">-->
+<!--      </div>-->
+    </div>
+{% endfor %}
+</div>
+
+<div class="pagination row">
+    <div class="m-auto">
+        <span class="step-links">
+            {% if loans.has_previous %}
+                <a href="?page=1" class="btn btn-success">
+                    &laquo; 1
+                </a>
+                <span>...</span>
+                <a href="?page={{ loans.previous_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ loans.previous_page_number }}
+                </a>
+            {% endif %}
+            <span class="current btn btn-danger btn-lg">
+                {{ loans.number }}
+            </span>
+            {% if loans.has_next %}
+                <a href="?page={{ loans.next_page_number }}"
+                   class="btn btn-secondary"
+                >
+                    {{ loans.next_page_number }}
+                </a>
+                <span>...</span>
+                <a href="?page={{ loans.paginator.num_pages }}"
+                   class="btn btn-success"
+                >
+                    {{ loans.paginator.num_pages }} &raquo;
+                </a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% if messages %}
+<script>
+    {% for msg in messages %}
+        alert('{{ msg.message }}');
+    {% endfor %}
+</script>
+{% endif %}
